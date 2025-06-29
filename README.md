@@ -2,10 +2,9 @@
 
 <div align="center">
   <img src="images/logo-neutraal-kieslab-donkerblauw.svg" alt="Neutraal Kieslab Logo" width="200">
-  
-  **Een interactieve stemwijzer om gebruikers te helpen bij het maken van weloverwogen politieke keuzes**
 </div>
 
+ **Een interactieve stemwijzer om gebruikers te helpen bij het maken van weloverwogen politieke keuzes**
 ## 📖 Over dit Project
 
 Neutraal Kieslab is een uitgebreide stemwijzer website ontwikkeld als schoolproject. Het platform helpt gebruikers bij het maken van geïnformeerde politieke keuzes door middel van een interactieve stemwijzer die persoonlijke standpunten vergelijkt met die van verschillende politieke partijen.

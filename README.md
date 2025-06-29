@@ -1,5 +1,7 @@
 Dit is een stemwijzer website die ik heb gemaakt voor een schoolproject. Het doel van deze website is om gebruikers te helpen bij het maken van een weloverwogen keuze door middel van een interactieve stemwijzer. Helaas is het niet mogelijk om deze website te demonstreren via GitHub Pages, omdat de functionaliteit voornamelijk afhankelijk is van PHP.
 
+
+
 ---- Englisch Translation ----
 
 This is a voting guide website that I created for a school project. The purpose of this website is to help users make an informed decision through an interactive voting guide. Unfortunately, it is not possible to demo this website on GitHub Pages as its functionality primarily relies on PHP.

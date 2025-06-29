@@ -10,6 +10,8 @@
 
 Neutraal Kieslab is een uitgebreide stemwijzer website ontwikkeld als schoolproject. Het platform helpt gebruikers bij het maken van geïnformeerde politieke keuzes door middel van een interactieve stemwijzer die persoonlijke standpunten vergelijkt met die van verschillende politieke partijen.
 
+Omdat deze website grotendeels bestaat uit PHP kan ik de demo helaas niet online zetten op github pages :(
+
 ## ✨ Functies
 
 ### 🔍 **Interactieve Stemwijzer**
@@ -49,5 +51,3 @@ Neutraal Kieslab is een uitgebreide stemwijzer website ontwikkeld als schoolproj
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Styling**: Custom CSS met responsive design
 - **Icons**: SVG iconen voor optimale prestaties
-
-## 📁 Project Structuur

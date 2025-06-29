@@ -1,0 +1,126 @@
+#account-creation {
+  --margin-block: 35px;
+  --margin-inline: auto;
+  --padding-block: 25px;
+  --padding-inline: 50px;
+
+  --border-width: 3px;
+  --button-height: 50px;
+  --button-padding: 10px;
+  display: flex;
+  background-color: var(--color-1);
+  height: auto;
+  margin-block: var(--margin-block);
+  margin-inline: var(--margin-inline);
+  flex-direction: column;
+  max-width: calc(40% - (var(--margin-block) * 2));
+  border-radius: 16px;
+  padding: var(--padding-block) var(--padding-inline);
+  height: calc(100% - (var(--padding-block) * 2) - (var(--margin-block) * 2));
+  & h1 {
+    text-align: center;
+  }
+  & form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+
+    & input {
+      --margin-block: 10px;
+      width: 100%;
+      height: calc(var(--button-height) + var(--button-padding) * 2);
+      margin-block: var(--margin-block);
+      padding: var(--button-padding);
+      border-radius: 8px;
+      font-size: 18px;
+      background-color: var(--color-1);
+      border: var(--border-width) solid var(--color-3);
+      &::placeholder {
+        color: var(--color-3), 100%;
+        filter: opacity(0.75);
+      }
+    }
+    & button {
+      width: 100%;
+      height: calc(var(--button-height) + var(--button-padding) * 2);
+      margin-block: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 20px;
+      background-color: var(--color-3);
+      color: var(--color-1);
+      border: none;
+      cursor: pointer;
+    }
+    & p {
+      margin: 0;
+    }
+  }
+}
+
+#back-button {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  left: 35px;
+  top: calc(var(--header-height) + 35px);
+  background-color: var(--color-5);
+  color: var(--color-1);
+  padding: 10px;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  & img {
+    transform: scaleX(-1);
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gap {
+  gap: 20px;
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 992px) {
+  #account-creation {
+    max-width: 60%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #account-creation {
+    max-width: 80%;
+    padding: 20px 30px;
+  }
+
+  #account-creation form input,
+  #account-creation form button {
+    height: auto;
+    padding: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #account-creation {
+    max-width: 95%;
+    padding: 15px 20px;
+  }
+
+  #account-creation h1 {
+    font-size: 24px;
+  }
+
+  #account-creation form input,
+  #account-creation form button {
+    font-size: 16px;
+  }
+}

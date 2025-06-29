@@ -1,0 +1,12 @@
+# Blokkeer alle toegang via de browser
+Order Deny,Allow
+Deny from all
+
+# Of gebruik deze (modernere) variant als je Apache 2.4+ gebruikt:
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+# Alleen toegang vanaf lokaal IP
+<IfModule mod_authz_core.c>
+  Require local
+</IfModule>

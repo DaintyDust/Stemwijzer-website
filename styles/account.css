@@ -1,0 +1,289 @@
+#account-information {
+  --margin-block: 35px;
+  --margin-inline: auto;
+  --padding-block: 25px;
+  --padding-inline: 50px;
+
+  --border-width: 3px;
+  --button-height: 35px;
+  display: flex;
+  background-color: var(--color-1);
+  color: var(--text-color);
+  height: auto;
+  margin-block: var(--margin-block);
+  margin-inline: var(--margin-inline);
+  flex-direction: column;
+  max-width: 60%;
+  border-radius: 16px;
+  padding: var(--padding-block) var(--padding-inline);
+  height: calc(100% - (var(--padding-block) * 2) - (var(--margin-block) * 2));
+  & h1 {
+    margin-block: 0.5rem;
+  }
+  & #profile-picture-container {
+    border-radius: 16px;
+    background-color: var(--color-2);
+    width: 35%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    color: var(--text-color);
+    & img {
+      width: 55%;
+      aspect-ratio: 1;
+    }
+    & label {
+      width: calc(100% - var(--padding));
+      height: calc(var(--button-height) + var(--button-padding) * 2);
+      margin-bottom: calc(var(--padding) / 2);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 20px;
+      background-color: var(--color-3);
+      color: var(--text-color-inverse);
+      border: none;
+      cursor: pointer;
+    }
+    & input[type="file"] {
+      display: none;
+    }
+  }
+  & #account-details {
+    --padding: 50px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 15px;
+    align-items: center;
+    height: calc(90% - (var(--padding) * 2));
+    width: calc(60% - (var(--padding) * 2));
+    background-color: var(--color-2);
+    color: var(--text-color);
+    border-radius: 16px;
+    padding: var(--padding);
+    align-content: start;
+    position: relative;
+    &:has(#update-password-form) {
+      display: flex;
+    }
+    & input {
+      width: 80%;
+      height: var(--button-height);
+      border-radius: 8px;
+      font-size: 18px;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      font-weight: bold;
+      color: var(--text-color);
+      &::placeholder {
+        color: var(--text-color);
+        opacity: 0.7;
+      }
+      &:disabled {
+        color: var(--text-color);
+        filter: opacity(0.75);
+      }
+    }
+    #update-password-form {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px 15px;
+      width: 100%;
+      align-items: center;
+      position: static;
+      align-content: center;
+      & label,
+      & input {
+        width: 100%;
+        text-align: center;
+      }
+      & input {
+        border: 2px solid var(--color-3);
+        padding: 20px;
+        &::placeholder {
+          color: var(--text-color);
+          opacity: 0.7;
+        }
+      }
+    }
+    & .input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    & .edit-icon {
+      background-image: url("../images/edit.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      opacity: 0.7;
+      pointer-events: auto;
+      filter: brightness(1);
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    [data-theme="dark"] & .edit-icon {
+      filter: brightness(10);
+    }
+    & label {
+      font-weight: bold;
+    }
+    & button.small {
+      padding: 5px;
+      border-radius: 8px;
+      font-size: 18px;
+      background-color: var(--color-3);
+      color: var(--text-color-inverse);
+      border: none;
+      cursor: pointer;
+    }
+    & button:not(.small) {
+      width: calc(100% - var(--padding));
+      height: calc(var(--button-height) + var(--button-padding) * 2);
+      margin-bottom: calc(var(--padding) / 2);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 20px;
+      background-color: var(--color-3);
+      color: var(--text-color-inverse);
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      left: calc(0px + (var(--padding) / 2));
+    }
+    & p {
+      margin: 0;
+    }
+  }
+}
+
+#back-button {
+     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    left: 20px;
+    top: 20px;
+    background-color: var(--color-5);
+    color: var(--text-color-inverse);
+    padding: 10px;
+    border-radius: 0.75rem;
+    text-decoration: none;
+  & img {
+    transform: scaleX(-1);
+  }
+}
+
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gap {
+  gap: 20px;
+}
+
+.maxsize {
+  width: 100%;
+  height: 100%;
+}
+.seperateflex {
+  justify-content: space-between;
+}
+
+.error-message,
+.success-message {
+  position: absolute;
+  bottom: -70px;
+  width: 100%;
+  left: calc(var(--padding) / 2);
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 992px) {
+  #account-information {
+    max-width: 80%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #account-information {
+    max-width: 90%;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #account-information #profile-picture-container {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  #account-information #profile-picture-container img {
+    width: 150px;
+  }
+
+  #account-information #account-details {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  #account-information #account-details button:not(.small) {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+    left: 0;
+  }
+
+  #back-button {
+    position: static;
+    margin: 20px auto;
+    width: fit-content;
+  }
+
+  .error-message,
+  .success-message {
+    position: static;
+    margin-top: 20px;
+    width: 100%;
+    left: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #account-information {
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  #account-information #account-details {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  #account-information #account-details label {
+    margin-top: 10px;
+  }
+
+  #account-information #account-details input {
+    width: 100%;
+  }
+
+  #account-information #update-password-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,202 @@
+#elections-container {
+  --margin-block: 35px;
+  --margin-inline: auto;
+  --container-padding: 30px;
+  display: flex;
+  background-color: var(--color-1);
+  height: auto;
+  margin-block: var(--margin-block);
+  margin-inline: var(--margin-inline);
+  flex-direction: column;
+  max-width: 60%;
+  width: 100%;
+  border-radius: 16px;
+  padding: var(--container-padding);
+  height: calc(100% - (var(--container-padding) * 2) - (var(--margin-block) * 2));
+  gap: 25px;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--text-color);
+  & h1 {
+    margin-block: 0.5rem;
+  }
+  & section {
+    --section-padding: 15px;
+    background-color: var(--color-2);
+    color: var(--color-1);
+    border-radius: 16px;
+    padding: var(--section-padding);
+    position: relative;
+    display: flex;
+    width: calc(100% - (var(--container-padding) * 2) + (var(--section-padding)) * 2);
+    justify-content: space-between;
+    & h2 {
+      margin: 0;
+    }
+    & .election-info {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      justify-content: center;
+      gap: 15px;
+    }
+    & .buttons-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: fit-content;
+      width: 15%;
+      gap: 20px;
+    }
+    & button {
+      width: 100%;
+      height: 70%;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      white-space: nowrap;
+      background-color: var(--color-3);
+      color: var(--color-1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    & form {
+      width: 100%;
+      height: 70%;
+    }
+    & form button {
+      height: 100%;
+    }
+    & label {
+      font-weight: bold;
+    }
+    & p {
+      margin: 0;
+    }
+  }
+}
+
+#elections-container {
+  & section.party-section {
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    & img {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: contain;
+      background-color: #fff;
+    }
+    & .party-details {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+#back-button {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  left: 20px;
+  top: calc(var(--header-height) + var(--nav-height) + 35px);
+  background-color: var(--color-5);
+  color: var(--color-1);
+  padding: 10px;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  & img {
+    transform: scaleX(-1);
+  }
+}
+
+.error-message,
+.success-message {
+  position: absolute;
+  bottom: -70px;
+  width: 100%;
+  left: calc(var(--padding) / 2);
+}
+
+/* Dark mode overrides for elections page */
+[data-theme="dark"] #elections-container section {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] #elections-container section button {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] #back-button {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] #elections-container section.party-section img {
+  background-color: var(--color-4);
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 992px) {
+  #elections-container {
+    max-width: 80%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #elections-container {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  #elections-container section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #elections-container section .election-info {
+    align-items: center;
+    width: 100%;
+  }
+
+  #elections-container section .buttons-container {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  #elections-container section button {
+    width: auto;
+    padding: 10px 15px;
+  }
+
+  #back-button {
+    position: static;
+    margin: 20px auto;
+    width: fit-content;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #elections-container {
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  #elections-container section {
+    padding: 10px;
+  }
+
+  #elections-container section.party-section {
+    flex-direction: column;
+  }
+
+  #elections-container section.party-section img {
+    margin-bottom: 10px;
+  }
+}

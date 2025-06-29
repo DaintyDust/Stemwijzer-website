@@ -1,0 +1,373 @@
+.stemhokje {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    text-align: center;
+    justify-content: space-evenly;
+    width: 100%;
+    position: fixed;
+    top: 50%;
+}
+
+.stembutton {
+    height: min(150px, 25vw);
+    width: min(150px, 25vw);
+    border-radius: 50%;
+    border: none;
+    box-shadow: var(--shadow-color) 0px 0px 10px;
+    font-size: min(80px, 13vw);
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: min(100px, 15vw);
+    z-index: 9000;
+    text-shadow: var(--text-color) 0px 0px 10px;
+}
+
+.juist {
+    background-color: var(--button-correct);
+}
+
+.onjuist {
+    background-color: var(--button-incorrect);
+}
+
+.stemsplash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.standpunt {
+    background-color: var(--color-2);
+    color: var(--color-1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-color) 0px 0px 10px;
+    width: min(80vw, 600px);
+    max-height: 80vh;
+    overflow-y: auto;
+    top: 300px;
+    position: fixed;
+    border: var(--card-bg) solid 3px;
+    text-align: center;
+    z-index: 10;
+}
+
+.stemwijzer {
+    visibility: hidden;
+}
+
+.intro-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    background-color: var(--color-2);
+    color: var(--color-1);
+}
+
+.intro-tekst {
+    font-size: 20px;
+    margin: 20px;
+    max-width: 800px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: var(--shadow-color) 0px 0px 10px;
+    text-align: center;
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    background-color: var(--color-2);
+}
+
+.intro-button {
+    background-color: var(--color-1);
+    color: var(--color-2);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 20px;
+    border: none;
+    box-shadow: var(--shadow-color) 0px 0px 10px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.intro-button:hover {
+    background-color: var(--color-5);
+    color: var(--color-1);
+    rotate: 10deg;
+    transition: all 0.3s ease-in-out;
+}
+
+.intro-button:active {
+    background-color: var(--color-5);
+    color: var(--color-1);
+    rotate: -10deg;
+    transition: all 0.3s ease-in-out;
+}
+
+#maincontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Styles for voting results page */
+.results-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    width: 70%;
+    gap: 0 50px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--color-1);
+    border-radius: 10px;
+    box-shadow: var(--shadow-color-lighter) 0px 4px 12px;
+}
+
+.results-container h1 {
+    grid-column: span 2;
+    color: var(--color-2);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.user-answers,
+.party-matches {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-color-lightest) 0px 1px 2px;
+}
+
+.user-answers h2,
+.party-matches h2 {
+    color: var(--color-2);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.user-answers ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-answers li {
+    padding: 10px;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 1rem;
+}
+
+.user-answers li:last-child {
+    border-bottom: none;
+}
+
+.user-results {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-color-lightest) 0px 1px 2px;
+}
+
+.user-results p {
+    padding: 10px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: var(--color-2);
+}
+
+.user-results ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-results li {
+    padding: 10px;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 1rem;
+}
+
+.user-results li:last-child {
+    border-bottom: none;
+}
+
+.party-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.party-match {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--party-match-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-color-lightest) 0px 1px 2px;
+}
+
+.party-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.party-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.party-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--color-2);
+}
+
+.match-percentage {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    width: 150px;
+    height: 20px;
+    background-color: var(--progress-bar-bg);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--progress-bar-fill);
+    border-radius: 10px;
+}
+
+#print {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  left: 20px;
+  top: calc(var(--header-height) + var(--nav-height) + 35px);
+  background-color: var(--color-5);
+  color: var(--text-color-inverse);
+  padding: 10px;
+  border-radius: 0.75rem;
+  text-decoration: none;
+}
+
+.match-percentage span {
+    font-weight: bold;
+    color: var(--text-color);
+}
+/* Dark mode styles for stemwijzer */
+[data-theme="dark"] .results-container h1,
+[data-theme="dark"] .standpunt,
+[data-theme="dark"] .intro-header,
+[data-theme="dark"] .intro-button,
+[data-theme="dark"] .intro-button:hover,
+[data-theme="dark"] .intro-button:active,
+[data-theme="dark"] .user-answers h2,
+[data-theme="dark"] .party-matches h2,
+[data-theme="dark"] .user-results p,
+[data-theme="dark"] .party-info h3 {
+    color: var(--text-color);
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 768px) {
+    .stemhokje {
+        flex-direction: column;
+        position: static;
+        margin-top: 50px;
+    }
+
+    .stembutton {
+        margin: 20px;
+    }
+
+    .standpunt {
+        width: 90%;
+        max-width: 90vw;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .intro-tekst {
+        width: 90%;
+        font-size: 18px;
+    }
+
+    .results-container {
+        width: 90%;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .results-container h1 {
+        grid-column: span 1;
+    }
+
+    .party-match {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .party-info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .match-percentage {
+        margin-top: 10px;
+    }
+
+    .progress-bar {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stembutton {
+        height: 100px;
+        width: 100px;
+        font-size: 60px;
+        margin: 15px;
+    }
+
+    .intro-tekst {
+        font-size: 16px;
+    }
+
+    .intro-button {
+        font-size: 18px;
+    }
+}

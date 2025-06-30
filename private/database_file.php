@@ -21,21 +21,20 @@ if (!function_exists('initializeFileDatabase')) {
             mkdir($data_dir, 0755, true);
         }
 
-        // Initialize with sample data if files don't exist
-        if (!file_exists($data_dir . 'users.json')) {
+        // Initialize with sample data if files don't exist        if (!file_exists($data_dir . 'users.json')) {
             $users = [
                 [
                     'id' => 1,
-                    'gebruikersnaam' => 'admin',
+                    'naam' => 'admin',
                     'email' => 'admin@stemwijzer.nl',
-                    'wachtwoord' => password_hash('admin123', PASSWORD_DEFAULT),
+                    'wachtwoord_hash' => password_hash('admin123', PASSWORD_DEFAULT),
                     'profielfoto' => 'DefaultProfile.svg'
                 ],
                 [
                     'id' => 2,
-                    'gebruikersnaam' => 'demo',
+                    'naam' => 'demo',
                     'email' => 'demo@stemwijzer.nl',
-                    'wachtwoord' => password_hash('demo123', PASSWORD_DEFAULT),
+                    'wachtwoord_hash' => password_hash('demo123', PASSWORD_DEFAULT),
                     'profielfoto' => 'DefaultProfile.svg'
                 ]
             ];
@@ -227,7 +226,7 @@ if (!function_exists('GetAllNews')) {
 if (!function_exists('GetUserByUsername')) {
     function GetUserByUsername($username)
     {
-        $users = fileDb_select('users', ['gebruikersnaam' => $username]);
+        $users = fileDb_select('users', ['naam' => $username]);
         return !empty($users) ? $users[0] : null;
     }
 }
@@ -244,12 +243,12 @@ if (!function_exists('CreateUser')) {
     function CreateUser($conn, $username, $email, $password)
     {
         $userData = [
-            'gebruikersnaam' => $username,
+            'naam' => $username,
             'email' => $email,
-            'wachtwoord' => password_hash($password, PASSWORD_DEFAULT),
+            'wachtwoord_hash' => password_hash($password, PASSWORD_DEFAULT),
             'profielfoto' => 'DefaultProfile.svg'
         ];
-
+        
         return fileDb_insert('users', $userData) ? $userData['id'] : null;
     }
 }
@@ -258,7 +257,7 @@ if (!function_exists('VerifyUser')) {
     function VerifyUser($username, $password)
     {
         $user = GetUserByUsername($username);
-        if ($user && password_verify($password, $user['wachtwoord'])) {
+        if ($user && password_verify($password, $user['wachtwoord_hash'])) {
             return $user;
         }
         return null;
@@ -275,7 +274,7 @@ if (!function_exists('UpdateUserProfilePicture')) {
 if (!function_exists('UpdateUsername')) {
     function UpdateUsername($userId, $newUsername)
     {
-        return fileDb_update('users', ['gebruikersnaam' => $newUsername], ['id' => $userId]);
+        return fileDb_update('users', ['naam' => $newUsername], ['id' => $userId]);
     }
 }
 
@@ -290,7 +289,7 @@ if (!function_exists('UpdateUserPassword')) {
     function UpdateUserPassword($userId, $newPassword)
     {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        return fileDb_update('users', ['wachtwoord' => $hashedPassword], ['id' => $userId]);
+        return fileDb_update('users', ['wachtwoord_hash' => $hashedPassword], ['id' => $userId]);
     }
 }
 
@@ -305,7 +304,7 @@ if (!function_exists('authenticateUser')) {
             $user = GetUserByEmail($username);
         }
         
-        if ($user && password_verify($password, $user['wachtwoord'])) {
+        if ($user && password_verify($password, $user['wachtwoord_hash'])) {
             return $user;
         }
         

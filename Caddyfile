@@ -2,7 +2,7 @@ stemwijzer-website.hackclub.app {
     root * /home/daintydust/pub
     
     # Handle PHP files
-    php_fastcgi unix//run/php/php8.1-fpm.sock
+    php_fastcgi unix//home/daintydust/php/fpm.sock
     
     # Try files in order: exact file, then with .php extension, then directory index
     try_files {path} {path}.php {path}/index.php

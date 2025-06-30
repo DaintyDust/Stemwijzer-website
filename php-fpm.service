@@ -1,0 +1,10 @@
+[Unit]
+Description=PHP FastCGI Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/daintydust/.nix-profile/bin/php-fpm -y /home/daintydust/php/fpm.conf -g /home/daintydust/php/fpm.pid -n -F
+
+[Install]
+WantedBy=default.target

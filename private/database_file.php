@@ -18,10 +18,10 @@ if (!function_exists('initializeFileDatabase')) {
 
         // Create data directory if it doesn't exist
         if (!is_dir($data_dir)) {
-            mkdir($data_dir, 0755, true);
-        }
+            mkdir($data_dir, 0755, true);        }
 
-        // Initialize with sample data if files don't exist        if (!file_exists($data_dir . 'users.json')) {
+        // Initialize with sample data if files don't exist
+        if (!file_exists($data_dir . 'users.json')) {
             $users = [
                 [
                     'id' => 1,

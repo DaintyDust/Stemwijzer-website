@@ -293,3 +293,22 @@ if (!function_exists('UpdateUserPassword')) {
         return fileDb_update('users', ['wachtwoord' => $hashedPassword], ['id' => $userId]);
     }
 }
+
+if (!function_exists('authenticateUser')) {
+    function authenticateUser($conn, $username, $password)
+    {
+        // Try to find user by username
+        $user = GetUserByUsername($username);
+        
+        // If not found by username, try by email
+        if (!$user) {
+            $user = GetUserByEmail($username);
+        }
+        
+        if ($user && password_verify($password, $user['wachtwoord'])) {
+            return $user;
+        }
+        
+        return false;
+    }
+}

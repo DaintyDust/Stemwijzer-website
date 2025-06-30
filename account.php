@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Neutraal Kieslab - Account</title>
+    <?php require 'php_require/resources.php'; ?>
     <link rel="stylesheet" href="styles/account.css">
     <script src="js/account.js"></script>
 </head>

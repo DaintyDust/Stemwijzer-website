@@ -1,0 +1,17 @@
+stemwijzer-website.hackclub.app {
+    root * /home/daintydust/pub
+    
+    # Handle PHP files
+    php_fastcgi unix//run/php/php8.1-fpm.sock
+    
+    # Try files in order: exact file, then with .php extension, then directory index
+    try_files {path} {path}.php {path}/index.php
+    
+    # Default to index.php if no file specified
+    file_server
+    
+    # Enable logging for debugging
+    log {
+        output file /home/daintydust/access.log
+    }
+}

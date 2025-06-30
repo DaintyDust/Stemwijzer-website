@@ -10,6 +10,6 @@ if (!function_exists('session_start')) {
     session_start();
 }
 
-require 'private/database.php';
+require 'private/database_file.php';
 require 'private/checklogin.php';
 ?>

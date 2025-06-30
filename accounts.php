@@ -1,18 +1,11 @@
 <?php
 session_start();
-require 'private/database.php';
+require 'private/database_file.php';
 $conn = getConnection();
 
 function LoadUsers($conn)
 {
-    try {
-        $pdo = $conn->prepare("SELECT * FROM gebruikers");
-        $pdo->execute();
-        $gebruikers = $pdo->fetchAll(PDO::FETCH_ASSOC);
-        return $gebruikers;
-    } catch (PDOException $e) {
-        echo "Fout bij ophalen gebruikers: " . $e->getMessage();
-    }
+    return fileDb_select('users');
 }
 
 $users = LoadUsers($conn);

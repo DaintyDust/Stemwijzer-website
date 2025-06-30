@@ -1,3 +1,4 @@
+<?php require 'php_require/autoload.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -8,7 +9,7 @@
     <title>Neutraal Kieslab - Stemwijzer Resultaten</title>
     <link rel="stylesheet" href="styles/stemwijzer.css">
     <script src="js/votingresults.js"></script>
-    <?php require 'php_require/autoload.php'; ?>
+    <?php require 'php_require/resources.php'; ?>
 </head>
 
 <body>

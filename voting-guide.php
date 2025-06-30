@@ -1,3 +1,4 @@
+<?php require 'php_require/autoload.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -7,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Neutraal Kieslab - Stemwijzer</title>
     <link rel="stylesheet" href="styles/stemwijzer.css">
-    <?php require 'php_require/autoload.php'; ?>
+    <?php require 'php_require/resources.php'; ?>
 </head>
 
 <body>

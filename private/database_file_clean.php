@@ -18,7 +18,8 @@ if (!function_exists('initializeFileDatabase')) {
 
         // Create data directory if it doesn't exist
         if (!is_dir($data_dir)) {
-            mkdir($data_dir, 0755, true);        }
+            mkdir($data_dir, 0755, true);
+        }
 
         // Initialize with sample data if files don't exist
         if (!file_exists($data_dir . 'users.json')) {
@@ -248,7 +249,7 @@ if (!function_exists('CreateUser')) {
             'wachtwoord_hash' => password_hash($password, PASSWORD_DEFAULT),
             'profielfoto' => 'DefaultProfile.svg'
         ];
-        
+
         return fileDb_insert('users', $userData) ? $userData['id'] : null;
     }
 }
@@ -298,16 +299,16 @@ if (!function_exists('authenticateUser')) {
     {
         // Try to find user by username
         $user = GetUserByUsername($username);
-        
+
         // If not found by username, try by email
         if (!$user) {
             $user = GetUserByEmail($username);
         }
-        
+
         if ($user && password_verify($password, $user['wachtwoord_hash'])) {
             return $user;
         }
-        
+
         return false;
     }
 }

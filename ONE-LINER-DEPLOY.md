@@ -4,16 +4,16 @@
 
 ssh daintydust@hackclub.app 'cd ~/pub && git pull && pkill -f caddy 2>/dev/null; pkill -f php 2>/dev/null; sleep 2 && cat > ~/Caddyfile << "EOF"
 {
-admin unix//home/daintydust/caddy-admin.sock
+    admin unix//home/daintydust/caddy-admin.sock
 }
 daintydust.hackclub.app {
-bind unix/.daintydust.hackclub.app.webserver.sock|777
-root _ /home/daintydust/pub
-file_server
-php_fastcgi 127.0.0.1:9000
+    bind unix/.daintydust.hackclub.app.webserver.sock|777
+    root * /home/daintydust/pub
+    file_server
+    php_fastcgi 127.0.0.1:9000
 }
 EOF
-nohup php -S 127.0.0.1:9000 -t /home/daintydust/pub > /dev/null 2>&1 & nohup caddy run --config ~/Caddyfile > /dev/null 2>&1 & sleep 3 && echo "Deployment complete!" && ls -la ~/._.sock'
+nohup php -S 127.0.0.1:9000 -t /home/daintydust/pub > /dev/null 2>&1 & nohup caddy run --config ~/Caddyfile > /dev/null 2>&1 & sleep 3 && echo "Deployment complete!" && ls -la ~/.*.sock'
 
 # Alternative if the above doesn't work, run these commands step by step:
 
@@ -29,13 +29,13 @@ cd ~/pub && git pull && pkill -f caddy; pkill -f php; sleep 2
 
 cat > ~/Caddyfile << 'EOF'
 {
-admin unix//home/daintydust/caddy-admin.sock
+    admin unix//home/daintydust/caddy-admin.sock
 }
 daintydust.hackclub.app {
-bind unix/.daintydust.hackclub.app.webserver.sock|777
-root \* /home/daintydust/pub
-file_server
-php_fastcgi 127.0.0.1:9000
+    bind unix/.daintydust.hackclub.app.webserver.sock|777
+    root * /home/daintydust/pub
+    file_server
+    php_fastcgi 127.0.0.1:9000
 }
 EOF
 

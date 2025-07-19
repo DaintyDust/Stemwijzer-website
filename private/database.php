@@ -1,8 +1,5 @@
 <?php
-$db_host = 'db.summaict-sd.nl';
-$db_name = 'sd1a_2425_groep2_stemwijzer';
-$db_user = 'sd1a_2425_groep2';
-$db_password = '9bf]_CrqHCZJK-C3';
+require_once 'databaseinfo.php';
 
 // Voorkom functie herdeclaratie
 if (!function_exists('getConnection')) {

@@ -22,10 +22,10 @@
             $news = getNews($conn);
             echo "<div id='news-container'>";
             foreach ($news as $article) {
-                $articleId = htmlspecialchars($article['id']);
-                $articleTitle = htmlspecialchars($article['titel']);
-                $articleContent = htmlspecialchars($article['inhoud']);
-                $articlePicture = htmlspecialchars($article['afbeelding']);
+                $articleId = htmlspecialchars($article['id'] ?? '');
+                $articleTitle = htmlspecialchars($article['titel'] ?? '');
+                $articleContent = htmlspecialchars($article['inhoud'] ?? '');
+                $articlePicture = htmlspecialchars($article['afbeelding'] ?? '');
 
                 echo "<form class='news-item' method='post' action='?view' onclick='this.submit()'>";
                 echo "<h2>$articleTitle</h2>";
@@ -56,7 +56,10 @@
                 <div id='article'>
                     <div id="title">
                         <h1><?php echo $articleTitle; ?></h1>
-                        <p class='article-meta'>Gepubliceerd op <?php echo $articleCreationDate; ?> door <?php echo getUserInfo($conn, $articleAuthorId)['naam']; ?></p>
+                        <p class='article-meta'>Gepubliceerd op <?php echo $articleCreationDate; ?> door <?php
+                                                                                                            $authorInfo = getUserInfo($conn, $articleAuthorId);
+                                                                                                            echo htmlspecialchars($authorInfo['naam'] ?? 'Onbekende auteur');
+                                                                                                            ?></p>
                     </div>
                     <?php
                     if (strpos($articlePicture, 'example.com') !== false) {

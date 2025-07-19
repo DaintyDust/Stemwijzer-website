@@ -43,97 +43,105 @@
             echo "<a href='news.php' id='back-button'><img src='images/arrow-right.svg' alt='Back Arrow'>Terug naar Nieuws</a>";
             $newsArticle = getNewsArticleInfo($conn, $_POST['article_id']);
 
-            $articleId = htmlspecialchars($newsArticle['id']);
-            $articleTitle = htmlspecialchars($newsArticle['titel']);
-            $articleContent = htmlspecialchars($newsArticle['inhoud']);
-            $articlePicture = htmlspecialchars($newsArticle['afbeelding']);
-            $articleCreationDate = htmlspecialchars($newsArticle['aangemaakt_op']);
-            $articleAuthorId = htmlspecialchars($newsArticle['auteur_id']);
+            if (!$newsArticle) {
+                echo "<div id='article'><h1>Artikel niet gevonden</h1><p>Het opgevraagde artikel bestaat niet of is niet meer beschikbaar.</p></div>";
+            } else {
+                $articleId = htmlspecialchars($newsArticle['id'] ?? '');
+                $articleTitle = htmlspecialchars($newsArticle['titel'] ?? '');
+                $articleContent = htmlspecialchars($newsArticle['inhoud'] ?? '');
+                $articlePicture = htmlspecialchars($newsArticle['afbeelding'] ?? '');
+                $articleCreationDate = htmlspecialchars($newsArticle['aangemaakt_op'] ?? '');
+                $articleAuthorId = htmlspecialchars($newsArticle['auteur_id'] ?? '');
         ?>
-            <div id='article'>
-                <div id="title">
-                    <h1><?php echo $articleTitle; ?></h1>
-                    <p class='article-meta'>Gepubliceerd op <?php echo $articleCreationDate; ?> door <?php echo getUserInfo($conn, $articleAuthorId)['naam']; ?></p>
-                </div>
-                <?php
-                if (strpos($articlePicture, 'example.com') !== false) {
-                    echo "<div id='image'>";
-                    echo "<img src='images/template-news.png' alt='Nieuws Icon'>";
-                    echo "</div>";
-                } elseif (!empty($articlePicture) && file_exists($articlePicture)) {
-                    echo "<div id='image'>";
-                    echo "<img src='$articlePicture' alt='Nieuws Icon'>";
-                    echo "</div>";
-                }
-                ?>
-                <div id="content">
-                    <p><?php echo nl2br($articleContent); ?></p>
-                </div>
-                <hr>
-                <div id="comments">
-                    <h2>Reacties</h2>
-                    <div id="comments-container">
-                        <?php
-                        $comments = getComments($conn, $articleId);
-                        if (count($comments) > 0) {
-                            foreach ($comments as $comment) {
-                                $commentText = htmlspecialchars($comment['comment_text']);
-                                $commentAuthor = getUserInfo($conn, htmlspecialchars($comment['gebruiker_id']));
-                                $commentDate = htmlspecialchars($comment['created_at']);
-                                $commentUpdatedDate = htmlspecialchars($comment['updated_at']);
+                <div id='article'>
+                    <div id="title">
+                        <h1><?php echo $articleTitle; ?></h1>
+                        <p class='article-meta'>Gepubliceerd op <?php echo $articleCreationDate; ?> door <?php echo getUserInfo($conn, $articleAuthorId)['naam']; ?></p>
+                    </div>
+                    <?php
+                    if (strpos($articlePicture, 'example.com') !== false) {
+                        echo "<div id='image'>";
+                        echo "<img src='images/template-news.png' alt='Nieuws Icon'>";
+                        echo "</div>";
+                    } elseif (!empty($articlePicture) && file_exists($articlePicture)) {
+                        echo "<div id='image'>";
+                        echo "<img src='$articlePicture' alt='Nieuws Icon'>";
+                        echo "</div>";
+                    }
+                    ?>
+                    <div id="content">
+                        <p><?php echo nl2br($articleContent); ?></p>
+                    </div>
+                    <hr>
+                    <div id="comments">
+                        <h2>Reacties</h2>
+                        <div id="comments-container">
+                            <?php
+                            $comments = getComments($conn, $articleId);
+                            if (count($comments) > 0) {
+                                foreach ($comments as $comment) {
+                                    $commentText = htmlspecialchars($comment['comment_text'] ?? '');
+                                    $commentAuthor = getUserInfo($conn, htmlspecialchars($comment['gebruiker_id'] ?? ''));
+                                    $commentDate = htmlspecialchars($comment['created_at'] ?? '');
+                                    $commentUpdatedDate = htmlspecialchars($comment['updated_at'] ?? '');
 
-                                $commentClass = ($comment['gebruiker_id'] == $_SESSION['UserId']) ? 'comment yourcomment' : 'comment';
-                                echo "<div class='$commentClass' data-comment-id='{$comment['comment_id']}' data-author-id='{$comment['gebruiker_id']}'>";
-                                echo "<div class='author-comment-info'>";
-                                $profileImage = $commentAuthor['profielfoto'] ?? '';
-                                if (empty($profileImage) || str_contains($profileImage, 'example.com')) {
-                                    $profileImage = 'images/DefaultProfile.svg';
-                                } else {
-                                    $profileImage = 'pfpUploads/' . htmlspecialchars($profileImage);
-                                }
-                                echo "<img class='Profile-Picture' src='" . htmlspecialchars($profileImage) . "' alt='Gebruiker Icon'>";
-                                echo "<div>";
-                                echo "<p class='comment-author'>{$commentAuthor['naam']}</p>";
-                                $dutchDays = ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'];
-                                $dutchMonths = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+                                    if (!$commentAuthor) {
+                                        continue; // Skip this comment if author info is not available
+                                    }
 
-                                $commentDateFormatted = date('Y', strtotime($commentDate)) == date('Y')
-                                    ? $dutchDays[date('w', strtotime($commentDate))] . ', ' . date('j', strtotime($commentDate)) . ' ' . $dutchMonths[date('n', strtotime($commentDate)) - 1] . ' om ' . date('H:i', strtotime($commentDate))
-                                    : date('j', strtotime($commentDate)) . ' ' . $dutchMonths[date('n', strtotime($commentDate)) - 1] . ' ' . date('Y', strtotime($commentDate)) . ' om ' . date('H:i', strtotime($commentDate));
-                                echo "<p>$commentDateFormatted</p>";
-                                echo "</div>";
-                                if ($comment['gebruiker_id'] == $_SESSION['UserId']) {
-                                    echo "<div class='comment-actions'>";
-                                    echo "<button class='edit-comment'><img src='images/edit-pencil.png' alt='Bewerk Reactie'></button>";
-                                    echo "<button class='delete-comment'><img src='images/trash.png' alt='Verwijder Reactie'></button>";
-                                    echo "<button class='cancel-comment-edit'><img src='images/cancel.png' alt='Annuleren'></button>";
+                                    $commentClass = ($comment['gebruiker_id'] == $_SESSION['UserId']) ? 'comment yourcomment' : 'comment';
+                                    echo "<div class='$commentClass' data-comment-id='{$comment['comment_id']}' data-author-id='{$comment['gebruiker_id']}'>";
+                                    echo "<div class='author-comment-info'>";
+                                    $profileImage = $commentAuthor['profielfoto'] ?? '';
+                                    if (empty($profileImage) || str_contains($profileImage, 'example.com')) {
+                                        $profileImage = 'images/DefaultProfile.svg';
+                                    } else {
+                                        $profileImage = 'pfpUploads/' . htmlspecialchars($profileImage);
+                                    }
+                                    echo "<img class='Profile-Picture' src='" . htmlspecialchars($profileImage) . "' alt='Gebruiker Icon'>";
+                                    echo "<div>";
+                                    echo "<p class='comment-author'>" . htmlspecialchars($commentAuthor['naam'] ?? 'Onbekende gebruiker') . "</p>";
+                                    $dutchDays = ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'];
+                                    $dutchMonths = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+
+                                    $commentDateFormatted = date('Y', strtotime($commentDate)) == date('Y')
+                                        ? $dutchDays[date('w', strtotime($commentDate))] . ', ' . date('j', strtotime($commentDate)) . ' ' . $dutchMonths[date('n', strtotime($commentDate)) - 1] . ' om ' . date('H:i', strtotime($commentDate))
+                                        : date('j', strtotime($commentDate)) . ' ' . $dutchMonths[date('n', strtotime($commentDate)) - 1] . ' ' . date('Y', strtotime($commentDate)) . ' om ' . date('H:i', strtotime($commentDate));
+                                    echo "<p>$commentDateFormatted</p>";
                                     echo "</div>";
-                                } else {
-                                    echo "<div class='comment-actions reply'>";
-                                    echo "<button class='reply-comment'><img src='images/reply-message.png' alt='Beantwoord Reactie'></button>";
+                                    if ($comment['gebruiker_id'] == $_SESSION['UserId']) {
+                                        echo "<div class='comment-actions'>";
+                                        echo "<button class='edit-comment'><img src='images/edit-pencil.png' alt='Bewerk Reactie'></button>";
+                                        echo "<button class='delete-comment'><img src='images/trash.png' alt='Verwijder Reactie'></button>";
+                                        echo "<button class='cancel-comment-edit'><img src='images/cancel.png' alt='Annuleren'></button>";
+                                        echo "</div>";
+                                    } else {
+                                        echo "<div class='comment-actions reply'>";
+                                        echo "<button class='reply-comment'><img src='images/reply-message.png' alt='Beantwoord Reactie'></button>";
+                                        echo "</div>";
+                                    }
+                                    echo "</div>";
+                                    $highlightClass = (isset($_SESSION['Username']) && strpos($commentText, '@' . $_SESSION['Username']) !== false) ? ' highlight' : '';
+                                    echo "<p class='comment-text$highlightClass'>" . preg_replace('/(<br\s*\/?>\s*){4,}/', '<br><br><br>', nl2br($commentText)) . "</p>";
+                                    echo "<div class='triangle right'></div>";
                                     echo "</div>";
                                 }
-                                echo "</div>";
-                                $highlightClass = (isset($_SESSION['Username']) && strpos($commentText, '@' . $_SESSION['Username']) !== false) ? ' highlight' : '';
-                                echo "<p class='comment-text$highlightClass'>" . preg_replace('/(<br\s*\/?>\s*){4,}/', '<br><br><br>', nl2br($commentText)) . "</p>";
-                                echo "<div class='triangle right'></div>";
-                                echo "</div>";
+                            } else {
+                                echo "<p>Er zijn nog geen reacties op dit artikel.</p>";
                             }
-                        } else {
-                            echo "<p>Er zijn nog geen reacties op dit artikel.</p>";
-                        }
-                        ?>
-                    </div>
-                    <div id="place-comments-container">
-                        <form id="comment-form">
-                            <input type="hidden" name="articleId" value="<?php echo $articleId; ?>">
-                            <textarea name="comment" placeholder="Plaats een reactie..." required></textarea>
-                            <button type="submit"><img src="images/send-message.svg" alt="Verzend bericht"></button>
-                        </form>
+                            ?>
+                        </div>
+                        <div id="place-comments-container">
+                            <form id="comment-form">
+                                <input type="hidden" name="articleId" value="<?php echo $articleId; ?>">
+                                <textarea name="comment" placeholder="Plaats een reactie..." required></textarea>
+                                <button type="submit"><img src="images/send-message.svg" alt="Verzend bericht"></button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php } ?>
+        <?php }
+        } ?>
         <!-- <form class="news-item" method="post" action="?view" onclick="this.submit()">
                 <h2>Nieuws</h2>
                 <img src="images/template-news.png" alt="Nieuws Icon">

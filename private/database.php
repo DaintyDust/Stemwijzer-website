@@ -1,19 +1,17 @@
 <?php
-require_once 'databaseinfo.php';
+$db_host = 'db.summaict-sd.nl';
+$db_name = 'sd1a_2425_groep2_stemwijzer';
+$db_user = 'sd1a_2425_groep2';
+$db_password = '9bf]_CrqHCZJK-C3';
 
 // Voorkom functie herdeclaratie
 if (!function_exists('getConnection')) {
     function getConnection()
     {
-        global $db_path;
+        global $db_host, $db_port, $db_name, $db_user, $db_password;
         try {
-            // Create SQLite database connection
-            $conn = new PDO("sqlite:$db_path");
+            $conn = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            // Initialize database if it doesn't exist
-            initializeDatabase($conn);
-            
             return $conn;
         } catch (PDOException $e) {
             echo "Verbinding mislukt: " . $e->getMessage();
@@ -21,221 +19,8 @@ if (!function_exists('getConnection')) {
         }
     }
 
-    function initializeDatabase($conn) {
-        try {
-            // Check if tables exist
-            $result = $conn->query("SELECT name FROM sqlite_master WHERE type='table' AND name='gebruikers'");
-            if ($result->fetchColumn() === false) {
-                createTables($conn);
-                insertSampleData($conn);
-            }
-        } catch (PDOException $e) {
-            error_log("Database initialization error: " . $e->getMessage());
-        }
-    }
-
-    function createTables($conn) {
-        // Create all tables based on your database.sql structure
-        
-        // Table: gebruikers
-        $conn->exec("
-            CREATE TABLE gebruikers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                naam VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL UNIQUE,
-                wachtwoord_hash VARCHAR(255) NOT NULL,
-                reset_token VARCHAR(255) DEFAULT NULL,
-                reset_verloopdatum TIMESTAMP DEFAULT NULL,
-                rol TEXT DEFAULT 'gebruiker' CHECK(rol IN ('gebruiker', 'beheerder')),
-                profielfoto VARCHAR(8000) DEFAULT NULL,
-                aangemaakt_op TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                uitslag VARCHAR(255) DEFAULT NULL
-            )
-        ");
-
-        // Table: partijen
-        $conn->exec("
-            CREATE TABLE partijen (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                naam VARCHAR(255) NOT NULL,
-                afkorting VARCHAR(10) DEFAULT NULL,
-                beschrijving TEXT DEFAULT NULL,
-                afbeelding VARCHAR(8000) DEFAULT NULL,
-                PositiePartij VARCHAR(100) DEFAULT NULL,
-                type_partij VARCHAR(100) DEFAULT NULL,
-                partij_leider VARCHAR(255) NOT NULL
-            )
-        ");
-
-        // Table: thema
-        $conn->exec("
-            CREATE TABLE thema (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                naam VARCHAR(255) NOT NULL
-            )
-        ");
-
-        // Table: stellingen
-        $conn->exec("
-            CREATE TABLE stellingen (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                thema_id INTEGER DEFAULT NULL,
-                tekst TEXT NOT NULL,
-                FOREIGN KEY (thema_id) REFERENCES thema(id)
-            )
-        ");
-
-        // Table: nieuws
-        $conn->exec("
-            CREATE TABLE nieuws (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                titel VARCHAR(255) NOT NULL,
-                inhoud TEXT NOT NULL,
-                afbeelding VARCHAR(8000) DEFAULT NULL,
-                auteur_id INTEGER DEFAULT NULL,
-                aangemaakt_op TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                status INTEGER NOT NULL,
-                FOREIGN KEY (auteur_id) REFERENCES gebruikers(id)
-            )
-        ");
-
-        // Table: comments
-        $conn->exec("
-            CREATE TABLE comments (
-                comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nieuws_id INTEGER NOT NULL,
-                gebruiker_id INTEGER NOT NULL,
-                comment_text TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (nieuws_id) REFERENCES nieuws(id),
-                FOREIGN KEY (gebruiker_id) REFERENCES gebruikers(id)
-            )
-        ");
-
-        // Table: verkiezingen
-        $conn->exec("
-            CREATE TABLE verkiezingen (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                naam VARCHAR(255) NOT NULL,
-                startdatum DATE DEFAULT NULL,
-                einddatum DATE DEFAULT NULL,
-                verkiezing_beschrijving TEXT NOT NULL
-            )
-        ");
-
-        // Table: partij_verkiezing
-        $conn->exec("
-            CREATE TABLE partij_verkiezing (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                partij_id INTEGER NOT NULL,
-                verkiezing_id INTEGER NOT NULL,
-                UNIQUE(partij_id, verkiezing_id),
-                FOREIGN KEY (partij_id) REFERENCES partijen(id),
-                FOREIGN KEY (verkiezing_id) REFERENCES verkiezingen(id)
-            )
-        ");
-    }
-
-    function insertSampleData($conn) {
-        // Insert themas
-        $themas = [
-            "Zorg (bijv. ziekenhuizen, ouderenzorg, zorgverzekeringen)",
-            "Onderwijs (bijv. schoolbudgetten, lesmethoden, onderwijskwaliteit)",
-            "Klimaat en milieu (bijv. CO₂-uitstoot, stikstof, windmolens)",
-            "Veiligheid (bijv. politie, criminaliteit, terrorismebestrijding)",
-            "Migratie en integratie (bijv. asielzoekers, verblijfsvergunningen)",
-            "Economie (bijv. belastingen, minimumloon, uitkeringen)",
-            "Woningmarkt (bijv. sociale huur, woningnood)",
-            "Internationale relaties (bijv. EU, NAVO, ontwikkelingshulp)"
-        ];
-
-        foreach ($themas as $index => $thema) {
-            $stmt = $conn->prepare("INSERT INTO thema (id, naam) VALUES (?, ?)");
-            $stmt->execute([$index + 1, $thema]);
-        }
-
-        // Insert partijen
-        $partijen = [
-            [1, 'PVV', 'PVV', 'De Partij voor de Vrijheid', 'images/pvv-300x219.jpg', 'Rechts', 'Organisatie', 'Geert Wilders'],
-            [3, 'CDA', 'CDA', 'Christen-Democratisch Appèl', 'images/CDA-logo-groen-rgb.png', 'Centrum', 'Organisatie', 'Henri Bontenbal'],
-            [4, 'VVD', 'VVD', 'Volkspartij voor Vrijheid en Democratie', 'images/Geschiedenis-van-de-VVD.jpg', 'Rechts', 'Organisatie', 'Dilan Yeşilgöz'],
-            [5, 'D66', 'D66', 'Democraten 66', 'images/rob-jetten-met-ruime-meerderheid-gekozen-tot-lijsttrekker-d66.jpg', 'Centrum', 'Organisatie', 'Rob Jetten'],
-            [6, 'GroenLinks', 'GL', 'GroenLinks, partij voor duurzaamheid en gelijkheid', 'images/groenlinks-logo-png_seeklogo-372200.png', 'Links', 'Organisatie', 'Jesse Klaver'],
-            [7, 'SP', 'SP', 'Socialistische Partij', 'images/201206 Lilian Marijnissen Bart Maat.jpg', 'Links', 'Organisatie', 'Lilian Marijnissen'],
-            [8, '50PLUS', '50+', '50PLUS', 'images/flag-of-the-50plus-logo-png_seeklogo-456209.png', 'Centrum', 'Organisatie', 'Liane den Haan']
-        ];
-
-        foreach ($partijen as $partij) {
-            $stmt = $conn->prepare("INSERT INTO partijen (id, naam, afkorting, beschrijving, afbeelding, PositiePartij, type_partij, partij_leider) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute($partij);
-        }
-
-        // Insert stellingen
-        $stellingen = [
-            [1, 3, "Nederland moet sneller overschakelen op groene energie."],
-            [2, 4, "Er moet meer politie op straat komen."],
-            [3, 6, "Gratis openbaar vervoer voor studenten en 65-plussers"],
-            [4, 3, "Verbod op fossiele subsidies vóór 2030"],
-            [5, 6, "Basisinkomen-experimenten in 5 gemeenten starten"],
-            [6, 6, "Verplichte loontransparantie voor bedrijven met >50 werknemers"],
-            [7, 4, "Legalisering en regulering van softdrugsverkoop"],
-            [8, 7, "30% sociale woningbouw bij alle nieuwbouwprojecten"],
-            [9, 1, "Gratis kinderopvang voor werkende ouders"],
-            [10, 2, "Stemrecht vanaf 16 jaar"],
-            [11, 6, "Vrijstelling erfbelasting voor kleine familiebedrijven"],
-            [12, 8, "Introductie 'burgerjury' bij grote infrastructurele projecten"],
-            [13, 2, "Volledige afschaffing van flexwerkcontracten in het onderwijs"],
-            [14, 3, "Belastingkorting voor circulaire bedrijven"],
-            [15, 1, "Loonverhoging van 10% voor zorgpersoneel"],
-            [16, 6, "Vrijstelling erfbelasting voor kleine familiebedrijven"],
-            [17, 3, "Nachtvluchten op Schiphol volledig afschaffen"],
-            [18, 6, "Werknemers krijgen stemrecht in raden van bestuur"],
-            [19, 6, "Eén loket voor alle overheidsdiensten met AI-ondersteuning"],
-            [20, 1, "Gratis ov-kaart voor mantelzorgers"]
-        ];
-
-        foreach ($stellingen as $stelling) {
-            $stmt = $conn->prepare("INSERT INTO stellingen (id, thema_id, tekst) VALUES (?, ?, ?)");
-            $stmt->execute($stelling);
-        }
-
-        // Insert sample user
-        $stmt = $conn->prepare("INSERT INTO gebruikers (id, naam, email, wachtwoord_hash, rol, aangemaakt_op) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([1, 'DaintyDust', 'testing@school.nl', password_hash('test123', PASSWORD_DEFAULT), 'beheerder', date('Y-m-d H:i:s')]);
-
-        // Insert verkiezing
-        $stmt = $conn->prepare("INSERT INTO verkiezingen (id, naam, startdatum, einddatum, verkiezing_beschrijving) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([1, 'Gemeenteraadsverkiezing 2025', '2025-03-01', '2025-03-15', '']);
-
-        // Insert partij_verkiezing relationships
-        $partij_verkiezingen = [[1,1], [3,1], [4,1], [5,1], [6,1], [7,1], [8,1]];
-        foreach ($partij_verkiezingen as $pv) {
-            $stmt = $conn->prepare("INSERT INTO partij_verkiezing (partij_id, verkiezing_id) VALUES (?, ?)");
-            $stmt->execute($pv);
-        }
-
-        // Insert sample news
-        $nieuws = [
-            [1, 'Stemmen gestart in Nederland', 'De verkiezingen zijn vandaag van start gegaan in het hele land.', 'images/epic-golden-scales-of-justice-symbool-van-gelijkheid-en-eerlijkheid_980804-1501.avif', 1, date('Y-m-d H:i:s'), 1],
-            [2, 'GroenLinks stijgt in de peilingen', 'Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc.', 'images/template-news.png', 1, date('Y-m-d H:i:s'), 1]
-        ];
-
-        foreach ($nieuws as $news) {
-            $stmt = $conn->prepare("INSERT INTO nieuws (id, titel, inhoud, afbeelding, auteur_id, aangemaakt_op, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute($news);
-        }
-    }
-
-    // Test the database connection when this file is called directly
     if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
         $conn = getConnection();
-        if ($conn) {
-            echo "Database connection successful!\n";
-            echo "Tables initialized.\n";
-        } else {
-            echo "Database connection failed!\n";
-        }
     }
 
     function CreateUser($conn, $name, $email, $password)
@@ -506,7 +291,7 @@ if (!function_exists('getConnection')) {
                         return [
                             'thumbsUp' => $data['up'],
                             'thumbsDown' => $data['down'],
-                            'partyMatches' => array_map(function($match) {
+                            'partyMatches' => array_map(function ($match) {
                                 // Fetch additional party info if needed
                                 return [
                                     'party' => ['id' => $match['id']],
@@ -614,7 +399,7 @@ if (!function_exists('getConnection')) {
             $results = [
                 'up' => $thumbsUp,
                 'down' => $thumbsDown,
-                'matches' => array_map(function($match) {
+                'matches' => array_map(function ($match) {
                     // Only store the essential information with shorter property names
                     return [
                         'id' => $match['party']['id'],
@@ -832,7 +617,7 @@ if (!function_exists('getConnection')) {
             // Toon partijmatches en zet de resultaten in de database van de gebruiker
 
             $ingelogde_gebruiker = isset($_SESSION['UserId']) && !empty($_SESSION['UserId']);
-            if ($ingelogde_gebruiker){
+            if ($ingelogde_gebruiker) {
                 //echo '<script> alert("TEST ' . $_SESSION['UserId'] . '")</script>';
             }
 

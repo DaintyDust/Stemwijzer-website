@@ -23,6 +23,17 @@ if (!function_exists('getConnection')) {
         $conn = getConnection();
     }
 
+    function clearVotingCookies()
+    {
+        //pagina laadt voor het eerst dus we verwijderen de cookies
+        if (isset($_COOKIE['thumbsUp'])) {
+            setcookie('thumbsUp', '', time() - 3600, '/');
+        }
+        if (isset($_COOKIE['thumbsDown'])) {
+            setcookie('thumbsDown', '', time() - 3600, '/');
+        }
+    }
+
     function CreateUser($conn, $name, $email, $password)
     {
         if (!$conn) {
@@ -329,13 +340,6 @@ if (!function_exists('getConnection')) {
 
     function getVotingStatements()
     {
-        //pagina laadt voor het eerst dus we verwijderen de cookies
-        if (isset($_COOKIE['thumbsUp'])) {
-            setcookie('thumbsUp', '', time() - 3600, '/');
-        }
-        if (isset($_COOKIE['thumbsDown'])) {
-            setcookie('thumbsDown', '', time() - 3600, '/');
-        }
         //functie om de stellingen op te halen voor de stemwijzer
         //Toegevoegd door Daan
         echo '

@@ -1,4 +1,7 @@
-<?php require 'php_require/autoload.php'; ?>
+<?php
+require 'php_require/autoload.php';
+clearVotingCookies(); // Clear voting cookies before any output
+?>
 <!doctype html>
 <html lang="en">
 
@@ -22,17 +25,17 @@
             Start de Stemwijzer
         </button>
         <script>
-        function startStemwijzer() {
-            const stemwijzerElement = document.querySelector('.stemwijzer');
-            const introElement = document.querySelector('.intro');
+            function startStemwijzer() {
+                const stemwijzerElement = document.querySelector('.stemwijzer');
+                const introElement = document.querySelector('.intro');
 
-            if (stemwijzerElement && introElement) {
-                stemwijzerElement.style.visibility = 'visible';
-                introElement.style.display = 'none';
-            } else {
-                console.error('Required elements not found: stemwijzer or intro');
+                if (stemwijzerElement && introElement) {
+                    stemwijzerElement.style.visibility = 'visible';
+                    introElement.style.display = 'none';
+                } else {
+                    console.error('Required elements not found: stemwijzer or intro');
+                }
             }
-        }
         </script>
     </section>
 

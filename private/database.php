@@ -44,7 +44,7 @@ if (!function_exists('getConnection')) {
             $conn->commit();
             return $lastId;
         } catch (PDOException $e) {
-            $conn->rollBackBack();
+            $conn->rollBack();
             echo "Fout bij aanmaken gebruiker: " . $e->getMessage();
             return null;
         }

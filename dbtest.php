@@ -47,8 +47,22 @@ function testDatabaseConnection()
         echo "<tr><td style='padding: 8px; background: #f0f0f0;'><strong>Server Encoding:</strong></td><td style='padding: 8px;'>$encoding</td></tr>";
         echo "</table>";
 
-        echo "<h3>Table Check:</h3>";
+        echo "<h3>Schema and Table Check:</h3>";
         try {
+            // First, check all schemas
+            $schema_query = $conn->query("
+                SELECT schema_name 
+                FROM information_schema.schemata 
+                WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast') 
+                ORDER BY schema_name
+            ");
+            $schemas = $schema_query->fetchAll(PDO::FETCH_COLUMN);
+
+            echo "<div style='background: #e2e3e5; color: #383d41; padding: 10px; border: 1px solid #d6d8db; border-radius: 5px; margin: 10px 0;'>";
+            echo "<strong>Available schemas:</strong> " . implode(', ', $schemas);
+            echo "</div>";
+
+            // Check tables in public schema
             $tables_query = $conn->query("
                 SELECT table_name 
                 FROM information_schema.tables 
@@ -57,9 +71,18 @@ function testDatabaseConnection()
             ");
             $tables = $tables_query->fetchAll(PDO::FETCH_COLUMN);
 
+            // Also check tables in ALL user schemas
+            $all_tables_query = $conn->query("
+                SELECT table_schema, table_name 
+                FROM information_schema.tables 
+                WHERE table_schema NOT IN ('information_schema', 'pg_catalog') 
+                ORDER BY table_schema, table_name
+            ");
+            $all_tables = $all_tables_query->fetchAll(PDO::FETCH_ASSOC);
+
             if (count($tables) > 0) {
                 echo "<div style='background: #d1ecf1; color: #0c5460; padding: 15px; border: 1px solid #b8daff; border-radius: 5px; margin: 10px 0;'>";
-                echo "<strong>Tables found:</strong> " . count($tables) . "<br>";
+                echo "<strong>Tables found in 'public' schema:</strong> " . count($tables) . "<br>";
                 echo "<strong>Table names:</strong> " . implode(', ', $tables);
                 echo "</div>";
 
@@ -67,12 +90,33 @@ function testDatabaseConnection()
                 $missing_tables = array_diff($expected_tables, $tables);
                 if (count($missing_tables) > 0) {
                     echo "<div style='background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeaa7; border-radius: 5px; margin: 10px 0;'>";
-                    echo "<strong>⚠️ WARNING:</strong> Some expected tables are missing: " . implode(', ', $missing_tables);
+                    echo "<strong>⚠️ WARNING:</strong> Some expected tables are missing from 'public' schema: " . implode(', ', $missing_tables);
                     echo "</div>";
                 }
             } else {
                 echo "<div style='background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeaa7; border-radius: 5px; margin: 10px 0;'>";
-                echo "<strong>⚠️ WARNING:</strong> No tables found in the database.";
+                echo "<strong>⚠️ WARNING:</strong> No tables found in 'public' schema.";
+                echo "</div>";
+            }
+
+            // Show all tables in all schemas
+            if (count($all_tables) > 0) {
+                echo "<div style='background: #e2e3e5; color: #383d41; padding: 10px; border: 1px solid #d6d8db; border-radius: 5px; margin: 10px 0;'>";
+                echo "<strong>All tables in database:</strong><br>";
+                foreach ($all_tables as $table) {
+                    echo "• " . $table['table_schema'] . "." . $table['table_name'] . "<br>";
+                }
+                echo "</div>";
+            } else {
+                echo "<div style='background: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 5px; margin: 10px 0;'>";
+                echo "<strong>❌ ERROR:</strong> No tables found in entire database! The database appears to be empty.";
+                echo "</div>";
+
+                echo "<div style='background: #d1ecf1; color: #0c5460; padding: 15px; border: 1px solid #b8daff; border-radius: 5px; margin: 10px 0;'>";
+                echo "<strong>💡 Next Steps:</strong><br>";
+                echo "1. You need to import your database schema<br>";
+                echo "2. If you have a SQL file (like test_postgresql.sql), run: <code>psql -h $db_host -p $db_port -U $db_user -d $db_name -f your_file.sql</code><br>";
+                echo "3. Or use a database management tool to import your schema and data";
                 echo "</div>";
             }
         } catch (PDOException $e) {

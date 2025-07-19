@@ -9,6 +9,9 @@ if (!function_exists('getConnection')) {
         try {
             $conn = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $conn->exec("SET search_path TO public");
+
             return $conn;
         } catch (PDOException $e) {
             echo "Verbinding mislukt: " . $e->getMessage();

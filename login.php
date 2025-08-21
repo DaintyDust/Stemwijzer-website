@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Volledige naam moet minimaal 2 tekens lang zijn.';
         } elseif (strlen($password) < 6) {
             $error = 'Wachtwoord moet minimaal 6 tekens lang zijn.';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } elseif (!preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $email)) {
             $error = 'Voer een geldig e-mailadres in.';
         } elseif (checkUserExists($conn, $username, $email)) {
             $error = 'Gebruikersnaam of e-mailadres bestaat al.';

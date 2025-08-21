@@ -18,6 +18,7 @@ function isLoggedIn()
 
     return $loggedIn;
 }
+
 function loginUser($user)
 {
     $_SESSION['UserId'] = $user['id'];
@@ -33,3 +34,5 @@ function logoutUser()
         session_destroy();
     }
 }
+
+// echo "User is logged in: " . (isLoggedIn() ? "Yes" : "No") . "\n";
